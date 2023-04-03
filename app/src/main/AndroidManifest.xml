@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:label="SuperCube"
+        tools:targetApi="31">
+        <activity
+            android:name="android.app.NativeActivity"
+            android:label="OpenGL ES 1"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="super_cube1" />
+        </activity>
+
+        <activity-alias
+            android:name="com.park.supercube.OpenGLES2"
+            android:targetActivity="android.app.NativeActivity"
+            android:label="OpenGL ES 2"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="super_cube2" />
+        </activity-alias>
+
+        <activity-alias
+            android:name="com.park.supercube.OpenGLES3"
+            android:targetActivity="android.app.NativeActivity"
+            android:label="OpenGL ES 3"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="super_cube3" />
+        </activity-alias>
+
+    </application>
+
+</manifest>
