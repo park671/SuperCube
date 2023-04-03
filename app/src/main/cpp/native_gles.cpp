@@ -11,6 +11,13 @@ int getGLVersion() {
     return 1;
 }
 
+int degreeX, degreeY;
+
+void rotate(int x, int y) {
+    degreeX = (degreeX + x) % 360;
+    degreeY = (degreeY + y) % 360;
+}
+
 float vertices[] = {
         -1.0f, 1.0f, 1.f, // top left
         -1.0f, -1.0f, 1.f, // bottom left
@@ -143,12 +150,13 @@ void onDraw() {
     glColorPointer(4, GL_FLOAT, 0, colors);
     glLoadIdentity();
     glTranslatef(0, 0, -10);
-    glRotatef(mRatio, 1.f, 0.f, 0.f);        //往上面倾斜(x轴)倾斜,根据每次得到的角度
+    glRotatef(degreeY, 1.f, 0.f, 0.f);
+    glRotatef(degreeX, 0.f, 1.f, 0.f);
 
     glDrawArrays(GL_TRIANGLES, 0, 107);
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisable(GL_CULL_FACE);
-    mRatio = (mRatio + 2) % 360;            //旋转角度减1
+//    mRatio = (mRatio + 2) % 360;            //旋转角度减1
 }

@@ -4,11 +4,19 @@
 
 #include "native_gl.h"
 #include "matrix.h"
+#include "matrix_mul_neo.h"
 #include <GLES3/gl3.h>
 #include <android/log.h>
 
 int getGLVersion() {
     return 3;
+}
+
+int degreeX, degreeY;
+
+void rotate(int x, int y) {
+    degreeX = (degreeX + x) % 360;
+    degreeY = (degreeY + y) % 360;
 }
 
 unsigned int mProgramId, mPositionId, mColorId;
@@ -142,20 +150,22 @@ float mBaseMatrix[] = {
 
 
 void transform() {
-    float rotateMarix[16], scaleMatrix[16], translateMatrix[16];
-    setRotateM(rotateMarix, 0, mRotateAgree, 1, 0, 0);
+    float rotateMarix[16],rotateMarixY[16], scaleMatrix[16], translateMatrix[16];
+    setRotateM(rotateMarix, 0, degreeY, 1, 0, 0);
+    setRotateM(rotateMarixY, 0, degreeX, 0, 1, 0);
+    matrix_multiply_4x4_neon_asm(rotateMarix, rotateMarixY, rotateMarix);
     scaleM(scaleMatrix, 0, mBaseMatrix, 0, 1.f, 1.f, 1.f);
-    translateM(translateMatrix, 0, mBaseMatrix, 0, 0.5f, 0.5f, 0.0f);
-    matrix_multiply_4x4_neon(rotateMarix, scaleMatrix, mModelMatrix);
-    matrix_multiply_4x4_neon(mModelMatrix, translateMatrix, mModelMatrix);
+    translateM(translateMatrix, 0, mBaseMatrix, 0, -0.5f, -0.5f, 0.0f);
+    matrix_multiply_4x4_neon_asm(rotateMarix, scaleMatrix, mModelMatrix);
+    matrix_multiply_4x4_neon_asm(mModelMatrix, translateMatrix, mModelMatrix);
 
     //设置透视投影
     frustumM(mProjectMatrix, 0, -mRatio, mRatio, -1, 1, 2, 300);
     //设置相机位置
-    setLookAtM(mViewMatrix, 0, 0.0f, -5.0f, 5.0f, 0.f, 0.f, 0.f, 0.f, 1.0f, 0.0f);
+    setLookAtM(mViewMatrix, 0, 0.0f, -0.0f, 10.0f, 0.f, 0.f, 0.f, 0.f, 1.0f, 0.0f);
     //计算变换矩阵
-    matrix_multiply_4x4_neon(mProjectMatrix, mViewMatrix, mMVPMatrix);
-    matrix_multiply_4x4_neon(mMVPMatrix, mModelMatrix, mMVPMatrix);
+    matrix_multiply_4x4_neon_asm(mProjectMatrix, mViewMatrix, mMVPMatrix);
+    matrix_multiply_4x4_neon_asm(mMVPMatrix, mModelMatrix, mMVPMatrix);
 }
 
 void onChange(int width, int height) {

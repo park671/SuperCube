@@ -10,4 +10,6 @@ void onChange(int width, int height);
 void onDraw();
 int getGLVersion();
 
+void rotate(int x, int y);
+
 #endif //NATIVE_LEARN_NATIVE_GL_H

@@ -76,9 +76,34 @@ void handle_app_cmd(struct android_app* app, int32_t cmd) {
     }
 }
 
+int lastX, lastY;
+
+int32_t handle_input_event(struct android_app* app, AInputEvent* event){
+    if (AInputEvent_getType(event) == AINPUT_EVENT_TYPE_MOTION) {
+        int x = AMotionEvent_getX(event, 0);
+        int y = AMotionEvent_getY(event, 0);
+        switch (AMotionEvent_getAction(event)) {
+            case AMOTION_EVENT_ACTION_DOWN:
+                x = lastX;
+                y = lastY;
+                break;
+            case AMOTION_EVENT_ACTION_MOVE:
+                rotate(x - lastX, y - lastY);
+                lastX = x;
+                lastY = y;
+                break;
+            case AMOTION_EVENT_ACTION_UP:
+                break;
+        }
+        return 1;
+    }
+    return 0;
+}
+
 void android_main(struct android_app* app) {
     LOGI("native_activity", "main start");
     app->onAppCmd = handle_app_cmd;
+    app->onInputEvent = handle_input_event;
     int events;
     android_poll_source *source;
     while(true) {

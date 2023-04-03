@@ -1,7 +1,11 @@
 cmake_minimum_required(VERSION 3.22.1)
 project("supercube")
 
-add_library(matrix STATIC matrix.cpp)
+set(ANDROID_STL "none")
+enable_language(ASM)
+set(CMAKE_ASM_SOURCE_FILE_EXTENSIONS s)
+
+add_library(matrix STATIC matrix.cpp matrix_mul_neo.s)
 add_library(native_gles3 STATIC native_gles3.cpp)
 add_library(native_gles2 STATIC native_gles2.cpp)
 add_library(native_gles STATIC native_gles.cpp)

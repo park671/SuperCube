@@ -17,8 +17,6 @@ void setLookAtM(float *rm, int rmOffset,
 void frustumM(float *m, int offset,
               float left, float right, float bottom, float top,
               float near, float far);
-void matrix_multiply_4x4_neon(float32_t *A, float32_t *B, float32_t *C);
-
 void scaleM(float *sm, int smOffset,
             float *m, int mOffset,
             float x, float y, float z);
