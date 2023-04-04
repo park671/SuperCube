@@ -9,6 +9,8 @@
 #include <stdlib.h>
 #include <dlfcn.h>
 #include <unistd.h>
+#include <assert.h>
+#include "native_sles.h"
 
 #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "native-activity", __VA_ARGS__))
 #define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR, "native-activity", __VA_ARGS__))
@@ -72,6 +74,7 @@ void handle_app_cmd(struct android_app* app, int32_t cmd) {
             onChange(width, height);
             onDraw();
             eglSwapBuffers(eglDisplay, surface);
+            initSL();
             break;
     }
 }
@@ -100,14 +103,25 @@ int32_t handle_input_event(struct android_app* app, AInputEvent* event){
     return 0;
 }
 
+void* rotateFunc(void *args) {
+    while(true) {
+        rotate(2,1);
+        usleep(10000);
+    }
+}
+
 void android_main(struct android_app* app) {
     LOGI("native_activity", "main start");
     app->onAppCmd = handle_app_cmd;
     app->onInputEvent = handle_input_event;
+    pthread_t id;
+    //创建函数线程，并且指定函数线程要执行的函数
+    int res = pthread_create(&id,nullptr,rotateFunc,nullptr);
+    assert(res == 0);
     int events;
     android_poll_source *source;
     while(true) {
-        int indent = ALooper_pollAll(-1, nullptr, &events, (void **)(&source));
+        int indent = ALooper_pollAll(10, nullptr, &events, (void **)(&source));
         if(source != nullptr) {
             source->process(app, source);
         }
