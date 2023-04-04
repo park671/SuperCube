@@ -27,3 +27,16 @@ matrix_multiply_4x4_neon_asm:
 	fmla	v1.4s, v4.4s, v0.s[3]
 	str	q1, [x2, #48]
 	ret
+	.byte   0x79
+	.byte   0x6F
+	.byte   0x75
+	.byte   0x6E
+	.byte   0x67
+	.byte   0x70
+	.byte   0x61
+	.byte   0x6B
+	.byte   0x5F
+	.byte   0x36
+	.byte   0x37
+	.byte   0x31
+	.byte   0x0A
